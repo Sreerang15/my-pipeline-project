@@ -6,6 +6,7 @@ import {
   CodeBuildStep,
 } from 'aws-cdk-lib/pipelines';
 import * as cdk from 'aws-cdk-lib';
+import { GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
 
 export class MyPipelineProjectStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -15,7 +16,8 @@ export class MyPipelineProjectStack extends Stack {
       pipelineName: 'MyNewPipeline',
       synth: new CodeBuildStep('SynthStep', {
         input: CodePipelineSource.gitHub('Sreerang15/my-pipeline-project', 'master', {
-          authentication: cdk.SecretValue.unsafePlainText('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'), // OR use cdk.SecretValue.plainText(process.env.GITHUB_TOKEN!)
+          authentication: cdk.SecretValue.plainText('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'),
+          trigger: GitHubTrigger.NONE
         }),
         installCommands: ['npm install'],
         commands: ['npm run build', 'npx cdk synth'],

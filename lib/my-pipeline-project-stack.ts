@@ -14,7 +14,7 @@ export class MyPipelineProjectStack extends Stack {
     super(scope, id, props);
 
 
-    console.log("test loggggggggggggggg  ss dd");
+    console.log("test loggggggggggggggg  ss dd ggg");
 
 
     

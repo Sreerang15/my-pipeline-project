@@ -24,7 +24,7 @@ export class MyPipelineProjectStack extends Stack {
     })
 
     const pipeline = new CodePipeline(this, 'Pipeline', {
-      pipelineName: 'MyNewPipeline',
+      pipelineName: 'MyNewPipeline2',
       synth: new CodeBuildStep('SynthStep', {
         input: CodePipelineSource.gitHub('Sreerang15/my-pipeline-project', 'master', {
           authentication: cdk.SecretValue.plainText('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'),

@@ -7,10 +7,13 @@ import {
 } from 'aws-cdk-lib/pipelines';
 import * as cdk from 'aws-cdk-lib';
 import { GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
+import * as logs from 'aws-cdk-lib/aws-logs'
 
 export class MyPipelineProjectStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
+
+    //const bl = new logs.LogGroup(this,'BuildLogGroup',{retention:logs.RetentionDays.ONE_WEEK})
 
     const pipeline = new CodePipeline(this, 'Pipeline', {
       pipelineName: 'MyNewPipeline',

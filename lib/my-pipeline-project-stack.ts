@@ -9,7 +9,7 @@ import * as cdk from 'aws-cdk-lib';
 import { GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
 import * as logs from 'aws-cdk-lib/aws-logs'
 
-export class MyPipelineProjectStack extends Stack {
+export class MyPipelineProjectStacknew extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
@@ -24,7 +24,7 @@ export class MyPipelineProjectStack extends Stack {
     })
 
     const pipeline = new CodePipeline(this, 'Pipeline', {
-      pipelineName: 'MyNewPipeline2',
+      pipelineName: 'MyNewPipeline6',
       synth: new CodeBuildStep('SynthStep', {
         input: CodePipelineSource.gitHub('Sreerang15/my-pipeline-project', 'master', {
           authentication: cdk.SecretValue.plainText('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'),

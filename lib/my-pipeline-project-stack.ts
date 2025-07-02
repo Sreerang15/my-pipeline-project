@@ -14,7 +14,7 @@ export class MyPipelineProjectStack extends Stack {
     super(scope, id, props);
 
 
-    console.log("test loggggggggggggggg  ss");
+    console.log("test loggggggggggggggg  ss dd");
     
     //const bl = new logs.LogGroup(this,'BuildLogGroup',{retention:logs.RetentionDays.ONE_WEEK})
 

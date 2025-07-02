@@ -15,8 +15,13 @@ export class MyPipelineProjectStack extends Stack {
 
 
     console.log("test loggggggggggggggg  ss dd");
+
+
     
-    //const bl = new logs.LogGroup(this,'BuildLogGroup',{retention:logs.RetentionDays.ONE_WEEK})
+
+    const buildLogs = new logs.LogGroup(this,'BuildLogGroup',{
+      retention : logs.RetentionDays.ONE_WEEK
+    })
 
     const pipeline = new CodePipeline(this, 'Pipeline', {
       pipelineName: 'MyNewPipeline',
@@ -27,6 +32,11 @@ export class MyPipelineProjectStack extends Stack {
         }),
         installCommands: ['npm install'],
         commands: ['npm run build', 'npx cdk synth'],
+        logging:{
+          cloudWatch :{
+            logGroup : buildLogs
+          }
+        }
       }),
     });
   }

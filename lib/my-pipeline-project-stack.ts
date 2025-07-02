@@ -29,7 +29,7 @@ export class MyPipelineProjectStacknew extends Stack {
         input: CodePipelineSource.gitHub('Sreerang15/my-pipeline-project', 'master', {
           authentication: cdk.SecretValue.plainText('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'),
           trigger: GitHubTrigger.NONE
-        }),
+        }),  
         installCommands: ['npm install'],
         commands: ['npm run build', 'npx cdk synth'],
         // logging:{

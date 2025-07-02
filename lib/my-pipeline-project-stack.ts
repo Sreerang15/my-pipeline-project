@@ -22,7 +22,7 @@ export class MyPipelineProjectStacknew extends Stack {
     const buildLogs = new logs.LogGroup(this,'BuildLogGroup',{
       retention : logs.RetentionDays.ONE_WEEK
     })
-
+  
     const pipeline = new CodePipeline(this, 'Pipeline', {
       pipelineName: 'MyNewPipeline6',
       synth: new CodeBuildStep('SynthStep', {

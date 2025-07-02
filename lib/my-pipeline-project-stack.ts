@@ -21,11 +21,6 @@ export class MyPipelineProjectStack extends Stack {
         }),
         installCommands: ['npm install'],
         commands: ['npm run build', 'npx cdk synth'],
-        logging:{
-          cloudWatch : {
-            enabled : false
-          }
-        }
       }),
     });
   }

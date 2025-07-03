@@ -1,4 +1,4 @@
-import { Stack, StackProps , IAspect } from 'aws-cdk-lib';
+import { Stack, StackProps , IAspect ,Aspects} from 'aws-cdk-lib';
 import { Construct , IConstruct  } from 'constructs';
 import {
   CodePipeline,
@@ -10,26 +10,25 @@ import { GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
 import * as logs from 'aws-cdk-lib/aws-logs'
 import { Names } from 'aws-cdk-lib/core';
 
-// class AssetLogRetentionAspect implements IAspect {
-//   visit(node: IConstruct): void {
-//     if (node instanceof logs.LogGroup) {
-//       const logGroupName = node.logGroupName;
 
-//       if (logGroupName?.startsWith('/aws/codebuild/')) {
-//         const cfnLogGroup = node.node.defaultChild as logs.CfnLogGroup;
-//         cfnLogGroup.retentionInDays = logs.RetentionDays.ONE_WEEK;
+class AssetLogRetentionAspect implements IAspect {
 
-//         // ✅ Apply proper removal policy
-//         node.applyRemovalPolicy(cdk.RemovalPolicy.DESTROY);
-//       }
-//     }
-//   }
-// }
+  constructor(private readonly days: number){}
+
+  visit(node: IConstruct): void {
+    if (node instanceof logs.CfnLogGroup && node.retentionInDays === undefined) {
+
+node.retentionInDays = this.days
+    }
+  }
+}
 
 export class MyPipelineProjectStacknew extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
    
+    cdk.Aspects.of(this).add(new AssetLogRetentionAspect(7));
+
 const logicalId = Names.uniqueId(this); // Deterministic across synths
 const logGroupName = `/aws/codebuild/${logicalId}`;
 
@@ -47,7 +46,8 @@ const buildLogs = new logs.LogGroup(this, 'BuildLogGroup', {
       commands: ['npm run build', 'npx cdk synth'],
              logging:{
           cloudWatch :{
-            logGroup : buildLogs
+            enabled:true,
+            //logGroup : buildLogs
           }
         }
     });
@@ -56,7 +56,7 @@ const buildLogs = new logs.LogGroup(this, 'BuildLogGroup', {
       pipelineName: 'MyNewPipeline6',
       synth: buildAction,
     });
-    //cdk.Aspects.of(this).add(new AssetLogRetentionAspect());
+    //cdk.Aspects.of(this).add(new AssetLogRetentionAspect(7));
 
 
 

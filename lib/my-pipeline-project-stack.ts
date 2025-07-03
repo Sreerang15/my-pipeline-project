@@ -45,7 +45,7 @@ const buildLogs = new logs.LogGroup(this, 'BuildLogGroup', {
       commands: ['npm run build', 'npx cdk synth'],
              logging:{
           cloudWatch :{
-            //enabled:true,
+            enabled:true,
             logGroup : buildLogs
           }
         }

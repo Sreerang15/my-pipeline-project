@@ -43,12 +43,12 @@ const buildLogs = new logs.LogGroup(this, 'BuildLogGroup', {
       }),
       installCommands: ['npm install'],
       commands: ['npm run build', 'npx cdk synth'],
-        //      logging:{
-        //   cloudWatch :{
-        //     enabled:true,
-        //     //logGroup : buildLogs
-        //   }
-        // }
+             logging:{
+          cloudWatch :{
+            //enabled:true,
+            logGroup : buildLogs
+          }
+        }
     });
 
     const pipeline = new CodePipeline(this, 'Pipeline', {

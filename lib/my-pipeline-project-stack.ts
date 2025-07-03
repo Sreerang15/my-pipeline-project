@@ -1,5 +1,5 @@
-import { Stack, StackProps } from 'aws-cdk-lib';
-import { Construct } from 'constructs';
+import { Stack, StackProps , IAspect } from 'aws-cdk-lib';
+import { Construct , IConstruct  } from 'constructs';
 import {
   CodePipeline,
   CodePipelineSource,
@@ -8,36 +8,47 @@ import {
 import * as cdk from 'aws-cdk-lib';
 import { GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
 import * as logs from 'aws-cdk-lib/aws-logs'
+//import { RemovalPolicy,Aspects } from 'aws-cdk-lib';
+
+class AssetLogRetentionAspect implements IAspect {
+  visit(node: IConstruct): void {
+    if (node instanceof logs.LogGroup) {
+      const logGroupName = node.logGroupName;
+
+      if (logGroupName?.startsWith('/aws/codebuild/')) {
+        const cfnLogGroup = node.node.defaultChild as logs.CfnLogGroup;
+        cfnLogGroup.retentionInDays = logs.RetentionDays.ONE_WEEK;
+
+        // ✅ Apply proper removal policy
+        node.applyRemovalPolicy(cdk.RemovalPolicy.DESTROY);
+      }
+    }
+  }
+}
 
 export class MyPipelineProjectStacknew extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
 
-    console.log("test loggggggggggggggg  ss dd ggg");
+    const buildAction = new CodeBuildStep('SynthStep', {
+      input: CodePipelineSource.gitHub('Sreerang15/my-pipeline-project', 'master', {
+        authentication: cdk.SecretValue.plainText('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'),
+        trigger: GitHubTrigger.NONE,
+      }),
+      installCommands: ['npm install'],
+      commands: ['npm run build', 'npx cdk synth'],
+    });
 
-
-    
-
-    const buildLogs = new logs.LogGroup(this,'BuildLogGroup',{
-      retention : logs.RetentionDays.ONE_WEEK
-    })
-  
     const pipeline = new CodePipeline(this, 'Pipeline', {
       pipelineName: 'MyNewPipeline6',
-      synth: new CodeBuildStep('SynthStep', {
-        input: CodePipelineSource.gitHub('Sreerang15/my-pipeline-project', 'master', {
-          authentication: cdk.SecretValue.plainText('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'),
-          trigger: GitHubTrigger.NONE
-        }),  
-        installCommands: ['npm install'],
-        commands: ['npm run build', 'npx cdk synth'],
-        // logging:{
-        //   cloudWatch :{
-        //     logGroup : buildLogs
-        //   }
-        // }
-      }),
+      synth: buildAction,
     });
+    cdk.Aspects.of(this).add(new AssetLogRetentionAspect());
+
+
+
   }
 }
+
+

@@ -27,7 +27,7 @@ export class MyPipelineProjectStacknew extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
    
-    cdk.Aspects.of(this).add(new AssetLogRetentionAspect(7));
+    cdk.Aspects.of(this).add(new AssetLogRetentionAspect(5));
 
 const logicalId = Names.uniqueId(this); // Deterministic across synths
 const logGroupName = `/aws/codebuild/${logicalId}`;
@@ -44,12 +44,12 @@ const buildLogs = new logs.LogGroup(this, 'BuildLogGroup', {
       }),
       installCommands: ['npm install'],
       commands: ['npm run build', 'npx cdk synth'],
-             logging:{
-          cloudWatch :{
-            enabled:true,
-            //logGroup : buildLogs
-          }
-        }
+        //      logging:{
+        //   cloudWatch :{
+        //     enabled:true,
+        //     //logGroup : buildLogs
+        //   }
+        // }
     });
 
     const pipeline = new CodePipeline(this, 'Pipeline', {

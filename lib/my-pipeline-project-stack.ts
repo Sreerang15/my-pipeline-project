@@ -8,31 +8,35 @@ import {
 import * as cdk from 'aws-cdk-lib';
 import { GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
 import * as logs from 'aws-cdk-lib/aws-logs'
-//import { RemovalPolicy,Aspects } from 'aws-cdk-lib';
+import { Names } from 'aws-cdk-lib/core';
 
-class AssetLogRetentionAspect implements IAspect {
-  visit(node: IConstruct): void {
-    if (node instanceof logs.LogGroup) {
-      const logGroupName = node.logGroupName;
+// class AssetLogRetentionAspect implements IAspect {
+//   visit(node: IConstruct): void {
+//     if (node instanceof logs.LogGroup) {
+//       const logGroupName = node.logGroupName;
 
-      if (logGroupName?.startsWith('/aws/codebuild/')) {
-        const cfnLogGroup = node.node.defaultChild as logs.CfnLogGroup;
-        cfnLogGroup.retentionInDays = logs.RetentionDays.ONE_WEEK;
+//       if (logGroupName?.startsWith('/aws/codebuild/')) {
+//         const cfnLogGroup = node.node.defaultChild as logs.CfnLogGroup;
+//         cfnLogGroup.retentionInDays = logs.RetentionDays.ONE_WEEK;
 
-        // ✅ Apply proper removal policy
-        node.applyRemovalPolicy(cdk.RemovalPolicy.DESTROY);
-      }
-    }
-  }
-}
+//         // ✅ Apply proper removal policy
+//         node.applyRemovalPolicy(cdk.RemovalPolicy.DESTROY);
+//       }
+//     }
+//   }
+// }
 
 export class MyPipelineProjectStacknew extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const buildLogs = new logs.LogGroup(this,'/aws/codebuild/BuildLogGroup',{
-      //retention : logs.RetentionDays.ONE_WEEK
-    })
+const logicalId = Names.uniqueId(this); // Deterministic across synths
+const logGroupName = `/aws/codebuild/${logicalId}`;
+
+const buildLogs = new logs.LogGroup(this, 'BuildLogGroup', {
+  logGroupName,
+  retention: logs.RetentionDays.ONE_WEEK,
+});
 
     const buildAction = new CodeBuildStep('SynthStep', {
       input: CodePipelineSource.gitHub('Sreerang15/my-pipeline-project', 'master', {
@@ -52,7 +56,7 @@ export class MyPipelineProjectStacknew extends Stack {
       pipelineName: 'MyNewPipeline6',
       synth: buildAction,
     });
-    cdk.Aspects.of(this).add(new AssetLogRetentionAspect());
+    //cdk.Aspects.of(this).add(new AssetLogRetentionAspect());
 
 
 

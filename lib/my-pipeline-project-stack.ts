@@ -29,7 +29,7 @@ import { Names } from 'aws-cdk-lib/core';
 export class MyPipelineProjectStacknew extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
-
+   
 const logicalId = Names.uniqueId(this); // Deterministic across synths
 const logGroupName = `/aws/codebuild/${logicalId}`;
 

@@ -30,6 +30,9 @@ export class MyPipelineProjectStacknew extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
+    const buildLogs = new logs.LogGroup(this,'/aws/codebuild/BuildLogGroup',{
+      //retention : logs.RetentionDays.ONE_WEEK
+    })
 
     const buildAction = new CodeBuildStep('SynthStep', {
       input: CodePipelineSource.gitHub('Sreerang15/my-pipeline-project', 'master', {
@@ -38,6 +41,11 @@ export class MyPipelineProjectStacknew extends Stack {
       }),
       installCommands: ['npm install'],
       commands: ['npm run build', 'npx cdk synth'],
+             logging:{
+          cloudWatch :{
+            logGroup : buildLogs
+          }
+        }
     });
 
     const pipeline = new CodePipeline(this, 'Pipeline', {

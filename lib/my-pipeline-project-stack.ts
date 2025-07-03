@@ -1,46 +1,66 @@
+import { Stack, StackProps , IAspect ,Aspects} from 'aws-cdk-lib';
+import { Construct , IConstruct  } from 'constructs';
+import {
+  CodePipeline,
+  CodePipelineSource,
+  CodeBuildStep,
+} from 'aws-cdk-lib/pipelines';
 import * as cdk from 'aws-cdk-lib';
-import { Stack, StackProps } from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
-import * as iam from 'aws-cdk-lib/aws-iam';
+import { GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
+import * as logs from 'aws-cdk-lib/aws-logs'
+import { Names } from 'aws-cdk-lib/core';
 
-export class LogCleanupStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
-    super(scope, id, props);
 
-    const logCleanerFunction = new lambda.Function(this, 'LogCleanerLambda', {
-      runtime: lambda.Runtime.NODEJS_20_X,
-      handler: 'index.handler',
-      code: lambda.Code.fromInline(`
-        const AWS = require('aws-sdk');
-        const logs = new AWS.CloudWatchLogs();
+class AssetLogRetentionAspect implements IAspect {
 
-        exports.handler = async () => {
-          let nextToken;
-          do {
-            const response = await logs.describeLogGroups({ nextToken }).promise();
-            const groupsToDelete = response.logGroups
-              .filter(group => group.logGroupName.startsWith('abc-'));
+  constructor(private readonly days: number){}
 
-            for (const group of groupsToDelete) {
-              console.log('Deleting', group.logGroupName);
-              await logs.deleteLogGroup({ logGroupName: group.logGroupName }).promise();
-            }
+  visit(node: IConstruct): void {
+    if (node instanceof logs.CfnLogGroup && node.retentionInDays === undefined) {
 
-            nextToken = response.nextToken;
-          } while (nextToken);
-        };
-      `),
-      timeout: cdk.Duration.minutes(1),
-    });
-
-    // IAM permissions
-    logCleanerFunction.addToRolePolicy(new iam.PolicyStatement({
-      actions: [
-        'logs:DescribeLogGroups',
-        'logs:DeleteLogGroup',
-      ],
-      resources: ['*'], // You can scope this better if needed
-    }));
+node.retentionInDays = this.days
+    }
   }
 }
+
+export class MyPipelineProjectStacknew extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
+    super(scope, id, props);
+   
+    //cdk.Aspects.of(this).add(new AssetLogRetentionAspect(5));
+
+const logicalId = Names.uniqueId(this); // Deterministic across synths
+const logGroupName = `/aws/codebuild/${logicalId}`;
+
+const buildLogs = new logs.LogGroup(this, 'BuildLogGroup', {
+  logGroupName,
+  retention: logs.RetentionDays.ONE_WEEK,
+});
+
+    const buildAction = new CodeBuildStep('SynthStep', {
+      input: CodePipelineSource.gitHub('Sreerang15/my-pipeline-project', 'master', {
+        authentication: cdk.SecretValue.plainText('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'),
+        trigger: GitHubTrigger.NONE,
+      }),
+      installCommands: ['npm install'],
+      commands: ['npm run build', 'npx cdk synth'],
+             logging:{
+          cloudWatch :{
+            enabled:true,
+            logGroup : buildLogs
+          }
+        }
+    });
+
+    const pipeline = new CodePipeline(this, 'Pipeline', {
+      pipelineName: 'MyNewPipeline6',
+      synth: buildAction,
+    });
+    //cdk.Aspects.of(this).add(new AssetLogRetentionAspect(7));
+
+
+
+  }
+}
+
+

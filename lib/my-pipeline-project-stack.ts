@@ -33,8 +33,7 @@ const logicalId = Names.uniqueId(this); // Deterministic across synths
 const logGroupName = `/aws/codebuild/${logicalId}`;
 
 const buildLogs = new logs.LogGroup(this, 'BuildLogGroup', {
-  logGroupName,
-  retention: logs.RetentionDays.ONE_WEEK,
+  retention: logs.RetentionDays.FIVE_DAYS,
 });
 
     const buildAction = new CodeBuildStep('SynthStep', {

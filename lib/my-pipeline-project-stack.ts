@@ -29,6 +29,20 @@ export class MyPipelineProjectStacknew extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
    
+        this.node.findAll().forEach((construct, index) => {
+          console.log("mmmmm");
+          
+            if (construct instanceof Project) {
+
+              console.log("mmmmm2222");
+                new logs.LogRetention(this, `LogRetention${index}`, {
+                    logGroupName: `/aws/codebuild/${construct.projectName}`,
+                    retention: logs.RetentionDays.THREE_DAYS,
+                })
+            }
+
+            console.log("mmmmm3333");
+        });
 
 new lambda.Function(this, 'DummyLambda', {
   runtime: lambda.Runtime.NODEJS_20_X,

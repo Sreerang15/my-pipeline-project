@@ -10,6 +10,8 @@ import { GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
 import * as logs from 'aws-cdk-lib/aws-logs'
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { LambdaStage } from './lambda-stage';
+import {Project} from 'aws-cdk-lib/aws-codebuild'
+//import {LogRetention, RetentionDays} from '@aws-cdk/aws-logs'
 
 class AssetLogRetentionAspect implements IAspect {
 
@@ -27,16 +29,6 @@ export class MyPipelineProjectStacknew extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
    
-    //cdk.Aspects.of(this).add(new AssetLogRetentionAspect(5));
-
-// const logicalId = Names.uniqueId(this); // Deterministic across synths
-// const logGroupName = `/aws/codebuild/${logicalId}`;
-
-// const buildLogs = new logs.LogGroup(this, 'BuildLogGroup', {
-//   retention: logs.RetentionDays.FIVE_DAYS,
-// });
-
-
 
 new lambda.Function(this, 'DummyLambda', {
   runtime: lambda.Runtime.NODEJS_20_X,
@@ -53,12 +45,7 @@ new lambda.Function(this, 'DummyLambda', {
       }),
       installCommands: ['npm install'],
       commands: ['npm run build', 'npx cdk synth'],
-        //      logging:{
-        //   cloudWatch :{
-        //     enabled:true,
-        //     logGroup : buildLogs
-        //   }
-        // }
+
     });
 
     const pipeline = new CodePipeline(this, 'Pipeline', {
@@ -67,7 +54,7 @@ new lambda.Function(this, 'DummyLambda', {
     });
 const lambdaStage = new LambdaStage(this, 'LambdaDeployStage');
 pipeline.addStage(lambdaStage);
-    //cdk.Aspects.of(this).add(new AssetLogRetentionAspect(7));
+    cdk.Aspects.of(this).add(new AssetLogRetentionAspect(3));
 
 
 

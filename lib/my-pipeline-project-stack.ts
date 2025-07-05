@@ -52,7 +52,7 @@ const buildLogs = new logs.LogGroup(this, 'BuildLogGroup', {
     });
 
     const pipeline = new CodePipeline(this, 'Pipeline', {
-      pipelineName: 'MyNewPipeline6',
+      pipelineName: 'MyNewPipeline8',
       synth: buildAction,
     });
     //cdk.Aspects.of(this).add(new AssetLogRetentionAspect(7));

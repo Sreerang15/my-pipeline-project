@@ -9,7 +9,7 @@ import * as cdk from 'aws-cdk-lib';
 import { GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
 import * as logs from 'aws-cdk-lib/aws-logs'
 import { Names } from 'aws-cdk-lib/core';
-
+import * as lambda from 'aws-cdk-lib/aws-lambda';
 
 class AssetLogRetentionAspect implements IAspect {
 
@@ -35,6 +35,16 @@ export class MyPipelineProjectStacknew extends Stack {
 // const buildLogs = new logs.LogGroup(this, 'BuildLogGroup', {
 //   retention: logs.RetentionDays.FIVE_DAYS,
 // });
+
+
+
+new lambda.Function(this, 'DummyLambda', {
+  runtime: lambda.Runtime.NODEJS_20_X,
+  handler: 'index.handler',
+  code: lambda.Code.fromAsset('lambda'), // <- this triggers the Assets stage
+});
+
+
   
     const buildAction = new CodeBuildStep('SynthStep', {
       input: CodePipelineSource.gitHub('Sreerang15/my-pipeline-project', 'master', {

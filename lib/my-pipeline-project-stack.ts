@@ -35,7 +35,7 @@ export class MyPipelineProjectStacknew extends Stack {
 // const buildLogs = new logs.LogGroup(this, 'BuildLogGroup', {
 //   retention: logs.RetentionDays.FIVE_DAYS,
 // });
-
+  
     const buildAction = new CodeBuildStep('SynthStep', {
       input: CodePipelineSource.gitHub('Sreerang15/my-pipeline-project', 'master', {
         authentication: cdk.SecretValue.plainText('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'),

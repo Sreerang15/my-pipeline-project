@@ -8,8 +8,8 @@ import {
 import * as cdk from 'aws-cdk-lib';
 import { GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
 import * as logs from 'aws-cdk-lib/aws-logs'
-import { Names } from 'aws-cdk-lib/core';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
+import { LambdaStage } from './lambda-stage';
 
 class AssetLogRetentionAspect implements IAspect {
 
@@ -65,6 +65,8 @@ new lambda.Function(this, 'DummyLambda', {
       pipelineName: 'MyNewPipeline8',
       synth: buildAction,
     });
+const lambdaStage = new LambdaStage(this, 'LambdaDeployStage');
+pipeline.addStage(lambdaStage);
     //cdk.Aspects.of(this).add(new AssetLogRetentionAspect(7));
 
 

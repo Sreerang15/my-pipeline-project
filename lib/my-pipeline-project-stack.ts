@@ -21,7 +21,7 @@ class CodeBuildLogRetentionAspect implements IAspect {
 
   visit(node: IConstruct): void {
     if (node instanceof Project) {
-      new logs.LogRetention(node, `LogRetention-${node.projectName}`, {
+      new logs.LogRetention(node, `LogRetention-${node.node.addr}`, {
         logGroupName: `/aws/codebuild/${node.projectName}`,
         retention: this.retention,
       });

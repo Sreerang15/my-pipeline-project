@@ -61,6 +61,6 @@ export class MyPipelineProjectStacknew extends Stack {
     pipeline.addStage(lambdaStage);
 
     // Apply log retention aspect
-    Aspects.of(this).add(new CodeBuildLogRetentionAspect(logs.RetentionDays.THREE_DAYS));
+    Aspects.of(this).add(new CodeBuildLogRetentionAspect(logs.RetentionDays.FIVE_DAYS));
   }
 }

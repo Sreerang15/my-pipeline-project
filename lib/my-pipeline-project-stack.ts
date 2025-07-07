@@ -34,6 +34,28 @@ export class MyPipelineProjectStacknew extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
+        const synthRole = iam.Role.fromRoleName(
+  this,
+  'ImportedSynthStepRole',
+  'MyPipelineProjectStack1-PipelineBuildSynthStepCdkBu-IuujQZ5EcJIV'
+);
+console.log("kjkjkj",synthRole);
+
+const inlinePolicy = new iam.Policy(this, 'InlineCloudWatchLogsPolicy', {
+  statements: [
+    new iam.PolicyStatement({
+      actions: [
+        'logs:CreateLogGroup',
+        'logs:CreateLogStream',
+        'logs:PutLogEvents',
+      ],
+      resources: ['arn:aws:logs:ap-south-1:807157871082:log-group:*:log-stream:*'],
+    }),
+  ],
+});
+
+inlinePolicy.attachToRole(synthRole);
+
     // Dummy Lambda to trigger asset stage
     new lambda.Function(this, 'DummyLambda', {
       runtime: lambda.Runtime.NODEJS_20_X,
@@ -67,27 +89,7 @@ export class MyPipelineProjectStacknew extends Stack {
   },
     });
 
-    const synthRole = iam.Role.fromRoleName(
-  this,
-  'ImportedSynthStepRole',
-  'MyPipelineProjectStack1-PipelineBuildSynthStepCdkBu-IuujQZ5EcJIV'
-);
-console.log("kjkjkj",synthRole);
 
-const inlinePolicy = new iam.Policy(this, 'InlineCloudWatchLogsPolicy', {
-  statements: [
-    new iam.PolicyStatement({
-      actions: [
-        'logs:CreateLogGroup',
-        'logs:CreateLogStream',
-        'logs:PutLogEvents',
-      ],
-      resources: ['arn:aws:logs:ap-south-1:807157871082:log-group:*:log-stream:*'],
-    }),
-  ],
-});
-
-inlinePolicy.attachToRole(synthRole);
 
     // Add application stage
     const lambdaStage = new LambdaStage(this, 'LambdaDeployStage');

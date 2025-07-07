@@ -11,6 +11,7 @@ import * as logs from 'aws-cdk-lib/aws-logs';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { LambdaStage } from './lambda-stage';
 import { Project } from 'aws-cdk-lib/aws-codebuild';
+import * as iam from 'aws-cdk-lib/aws-iam';
 
 class CodeBuildLogRetentionAspect implements IAspect {
   private readonly retention: logs.RetentionDays;
@@ -65,6 +66,19 @@ export class MyPipelineProjectStacknew extends Stack {
     ],
   },
     });
+
+    const synthRole = iam.Role.fromRoleName(
+  this,
+  'ImportedSynthStepRole',
+  'MyPipelineProjectStack1-PipelineBuildSynthStepCdkBu-IuujQZ5EcJIV'
+);
+
+synthRole.addToPrincipalPolicy(
+  new iam.PolicyStatement({
+    actions: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
+    resources: ['arn:aws:logs:ap-south-1:807157871082:log-group:*:log-stream:*'],
+  })
+);
 
     // Add application stage
     const lambdaStage = new LambdaStage(this, 'LambdaDeployStage');

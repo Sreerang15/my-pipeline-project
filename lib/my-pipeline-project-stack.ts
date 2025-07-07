@@ -72,13 +72,22 @@ export class MyPipelineProjectStacknew extends Stack {
   'ImportedSynthStepRole',
   'MyPipelineProjectStack1-PipelineBuildSynthStepCdkBu-IuujQZ5EcJIV'
 );
+console.log("kjkjkj",synthRole);
 
-synthRole.addToPrincipalPolicy(
-  new iam.PolicyStatement({
-    actions: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
-    resources: ['arn:aws:logs:ap-south-1:807157871082:log-group:*:log-stream:*'],
-  })
-);
+const inlinePolicy = new iam.Policy(this, 'InlineCloudWatchLogsPolicy', {
+  statements: [
+    new iam.PolicyStatement({
+      actions: [
+        'logs:CreateLogGroup',
+        'logs:CreateLogStream',
+        'logs:PutLogEvents',
+      ],
+      resources: ['arn:aws:logs:ap-south-1:807157871082:log-group:*:log-stream:*'],
+    }),
+  ],
+});
+
+inlinePolicy.attachToRole(synthRole);
 
     // Add application stage
     const lambdaStage = new LambdaStage(this, 'LambdaDeployStage');

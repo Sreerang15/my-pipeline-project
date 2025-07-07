@@ -50,8 +50,8 @@ export class MyPipelineProjectStacknew extends Stack {
       commands: ['npm run build', 'npx cdk synth'],
       rolePolicyStatements: [
     new cdk.aws_iam.PolicyStatement({
-      actions: ['logs:CreateLogStream', 'logs:PutLogEvents'],
-      resources: ['arn:aws:logs:ap-south-1:807157871082:log-group:*'],
+      actions: ['logs:*'],
+      resources: ['*'],
     }),
   ],
     });

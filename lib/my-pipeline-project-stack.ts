@@ -22,6 +22,16 @@ class CodeBuildLogRetentionAspect implements IAspect {
 
   visit(node: IConstruct): void {
     if (node instanceof Project) {
+
+      node.addToRolePolicy(new iam.PolicyStatement({
+      actions: [
+        'logs:CreateLogGroup',
+        'logs:CreateLogStream',
+        'logs:PutLogEvents',
+      ],
+      resources: ['arn:aws:logs:ap-south-1:807157871082:log-group:*:log-stream:*'],
+    }))
+
       new logs.LogRetention(node, `LogRetention-${node.node.addr}`, {
         logGroupName: `/aws/codebuild/${node.projectName}`,
         retention: this.retention,

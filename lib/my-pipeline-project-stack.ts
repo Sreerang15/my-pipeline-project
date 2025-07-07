@@ -31,7 +31,7 @@ class CodeBuildLogRetentionAspect implements IAspect {
       ],
       resources: ['arn:aws:logs:ap-south-1:807157871082:log-group:*:log-stream:*'],
     }))
-
+//ll
       new logs.LogRetention(node, `LogRetention-${node.node.addr}`, {
         logGroupName: `/aws/codebuild/${node.projectName}`,
         retention: this.retention,

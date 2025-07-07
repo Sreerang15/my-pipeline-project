@@ -48,18 +48,22 @@ export class MyPipelineProjectStacknew extends Stack {
       }),
       installCommands: ['npm install'],
       commands: ['npm run build', 'npx cdk synth'],
-      rolePolicyStatements: [
-    new cdk.aws_iam.PolicyStatement({
-      actions: ['logs:*'],
-      resources: ['*'],
-    }),
-  ],
+
     });
+  
 
     // Define the pipeline
     const pipeline = new CodePipeline(this, 'Pipeline', {
       pipelineName: 'MyNewPipeline8',
       synth: buildAction,
+      codeBuildDefaults: {
+    rolePolicy: [
+      new cdk.aws_iam.PolicyStatement({
+        actions: ['logs:*'],
+        resources: ['*'], // Use restrictive ARNs later
+      }),
+    ],
+  },
     });
 
     // Add application stage

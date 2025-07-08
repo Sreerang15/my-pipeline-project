@@ -22,7 +22,10 @@
     "strictPropertyInitialization": false,
     "typeRoots": [
       "./node_modules/@types"
-    ]
+    ],
+    "outDir": "lib",         // output folder for compiled JS
+    //         // where your TypeScript live
+    "esModuleInterop": true
   },
   "exclude": [
     "node_modules",

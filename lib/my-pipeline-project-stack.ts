@@ -81,6 +81,7 @@ export class MyPipelineProjectStacknew extends Stack {
       ),
       installCommands: ["npm install"],
       commands: ["npm run build"],
+      primaryOutputDirectory: "./",
     });
 
     const SynthAction = new ShellStep("Synth", {

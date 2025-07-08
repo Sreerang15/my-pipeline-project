@@ -4,6 +4,7 @@ import {
   CodePipeline,
   CodePipelineSource,
   CodeBuildStep,
+  ShellStep,
 } from "aws-cdk-lib/pipelines";
 import * as cdk from "aws-cdk-lib";
 import { GitHubTrigger } from "aws-cdk-lib/aws-codepipeline-actions";
@@ -67,7 +68,7 @@ export class MyPipelineProjectStacknew extends Stack {
     });
 
     // Define the synth step
-    const buildAction = new CodeBuildStep("SynthStep", {
+    const buildAction = new CodeBuildStep("Build", {
       input: CodePipelineSource.gitHub(
         "Sreerang15/my-pipeline-project",
         "master",
@@ -79,26 +80,18 @@ export class MyPipelineProjectStacknew extends Stack {
         }
       ),
       installCommands: ["npm install"],
-      commands: ["npm run build", "npx cdk synth"],
-      logging: {
-        cloudWatch: {
-          enabled: true,
-        },
-      },
+      commands: ["npm run build"],
+    });
+
+    const SynthAction = new ShellStep("Synth", {
+      input: buildAction,
+      commands: ["npx cdk synth"],
     });
 
     // Define the pipeline
     const pipeline = new CodePipeline(this, "Pipeline", {
       pipelineName: "MyNewPipeline8",
-      synth: buildAction,
-      codeBuildDefaults: {
-        rolePolicy: [
-          new cdk.aws_iam.PolicyStatement({
-            actions: ["logs:*"],
-            resources: ["*"], // Use restrictive ARNs later
-          }),
-        ],
-      },
+      synth: SynthAction,
     });
 
     // Add application stage
@@ -106,8 +99,8 @@ export class MyPipelineProjectStacknew extends Stack {
     pipeline.addStage(lambdaStage);
 
     // Apply log retention aspect
-    Aspects.of(this).add(
-      new CodeBuildLogRetentionAspect(logs.RetentionDays.FIVE_DAYS)
-    );
+    // Aspects.of(this).add(
+    //   new CodeBuildLogRetentionAspect(logs.RetentionDays.FIVE_DAYS)
+    // );
   }
 }

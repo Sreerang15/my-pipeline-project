@@ -82,7 +82,7 @@ export class MyPipelineProjectStacknew extends Stack {
       commands: ["npm run build", "npx cdk synth"],
       logging: {
         cloudWatch: {
-          enabled: false,
+          enabled: true,
         },
       },
     });

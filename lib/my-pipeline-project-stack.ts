@@ -68,7 +68,8 @@ export class MyPipelineProjectStacknew extends Stack {
     });
 
     // Define the synth step
-    const buildAction = new CodeBuildStep("Build", {
+
+    const buildAction = new CodeBuildStep("SynthStep", {
       input: CodePipelineSource.gitHub(
         "Sreerang15/my-pipeline-project",
         "master",
@@ -79,15 +80,14 @@ export class MyPipelineProjectStacknew extends Stack {
           trigger: GitHubTrigger.NONE,
         }
       ),
-      installCommands: ["ls"],
-      commands: ["npm install"],
-      primaryOutputDirectory: "./",
+      installCommands: ["npm install"],
+      commands: ["npm run build", "npx cdk synth"],
     });
 
     const SynthAction = new ShellStep("Synth", {
       input: buildAction,
-      installCommands: ["ls", "npm install", "npm install -g typescript"],
-      commands: ["npm run build", "npx cdk synth"],
+      installCommands: ["ls"],
+      commands: ["ls"],
       primaryOutputDirectory: "cdk.out",
     });
 

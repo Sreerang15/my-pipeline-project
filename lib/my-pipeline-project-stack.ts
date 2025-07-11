@@ -86,7 +86,12 @@ export class MyPipelineProjectStacknew extends Stack {
 
     const SynthAction = new ShellStep("Synth", {
       input: buildAction,
-      commands: ["npm run build", "npx cdk synth"],
+      commands: [
+        "npm install",
+        "npm install -g typescript",
+        "npm run build",
+        "npx cdk synth",
+      ],
       primaryOutputDirectory: "cdk.out",
     });
 

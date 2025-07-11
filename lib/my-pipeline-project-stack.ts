@@ -82,20 +82,12 @@ export class MyPipelineProjectStacknew extends Stack {
       ),
       installCommands: ["npm install"],
       commands: ["npm run build", "npx cdk synth"],
-      primaryOutputDirectory: "cdk.out",
-    });
-
-    const SynthAction = new ShellStep("Synth", {
-      input: buildAction,
-      installCommands: ["ls"],
-      commands: ["ls"],
-      primaryOutputDirectory: "cdk.out",
     });
 
     // Define the pipeline
     const pipeline = new CodePipeline(this, "Pipeline", {
       pipelineName: "MyNewPipeline8",
-      synth: SynthAction,
+      synth: buildAction,
     });
 
     // Add application stage

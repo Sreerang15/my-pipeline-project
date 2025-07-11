@@ -23,9 +23,6 @@
     "typeRoots": [
       "./node_modules/@types"
     ],
-         // output folder for compiled JS
-    //         // where your TypeScript live
-    "esModuleInterop": true
   },
   "exclude": [
     "node_modules",

@@ -13,6 +13,8 @@ import * as lambda from "aws-cdk-lib/aws-lambda";
 import { LambdaStage } from "./lambda-stage";
 import { Project } from "aws-cdk-lib/aws-codebuild";
 import * as iam from "aws-cdk-lib/aws-iam";
+import * as signer from "aws-cdk-lib/aws-signer";
+import { warn } from "console";
 
 class CodeBuildLogRetentionAspect implements IAspect {
   private readonly retention: logs.RetentionDays;
@@ -36,35 +38,25 @@ export class MyPipelineProjectStacknew extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    // const synthRole = iam.Role.fromRoleName(
-    //   this,
-    //   "ImportedSynthStepRole",
-    //   "MyPipelineProjectStack1-PipelineBuildSynthStepCdkBu-IuujQZ5EcJIV"
-    // );
-    // console.log("kjkjkj", synthRole);
+    const signingProfile = new signer.SigningProfile(this, "MySigningProfile", {
+      platform: signer.Platform.AWS_LAMBDA_SHA384_ECDSA,
+    });
 
-    // const inlinePolicy = new iam.Policy(this, "InlineCloudWatchLogsPolicy", {
-    //   statements: [
-    //     new iam.PolicyStatement({
-    //       actions: [
-    //         "logs:CreateLogGroup",
-    //         "logs:CreateLogStream",
-    //         "logs:PutLogEvents",
-    //       ],
-    //       resources: [
-    //         "arn:aws:logs:ap-south-1:807157871082:log-group:*:log-stream:*",
-    //       ],
-    //     }),
-    //   ],
-    // });
-
-    // inlinePolicy.attachToRole(synthRole);
+    // Code Signing Configuration
+    const codeSigningConfig = new lambda.CodeSigningConfig(
+      this,
+      "MyCodeSigningConfig",
+      {
+        signingProfiles: [signingProfile],
+      }
+    );
 
     // Dummy Lambda to trigger asset stage
     new lambda.Function(this, "DummyLambda", {
       runtime: lambda.Runtime.NODEJS_20_X,
       handler: "index.handler",
       code: lambda.Code.fromAsset("lambda"),
+      codeSigningConfig: codeSigningConfig,
     });
 
     // Define the synth step

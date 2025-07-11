@@ -79,14 +79,15 @@ export class MyPipelineProjectStacknew extends Stack {
           trigger: GitHubTrigger.NONE,
         }
       ),
-      installCommands: ["npm install"],
-      commands: ["npm run build"],
-      primaryOutputDirectory: "cdk.out",
+      installCommands: ["ls"],
+      commands: ["npm install"],
+      primaryOutputDirectory: "./",
     });
 
     const SynthAction = new ShellStep("Synth", {
       input: buildAction,
-      commands: ["npx cdk synth"],
+      commands: ["npm run build", "npx cdk synth"],
+      primaryOutputDirectory: "cdk.out",
     });
 
     // Define the pipeline

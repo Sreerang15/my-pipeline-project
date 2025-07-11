@@ -87,7 +87,7 @@ export class MyPipelineProjectStacknew extends Stack {
     const SynthAction = new ShellStep("Synth", {
       input: buildAction,
       installCommands: ["npm install"],
-      commands: ["npm run build", "npx cdk synth"],
+      commands: ["ls", "npm run build", "npx cdk synth"],
     });
 
     // Define the pipeline

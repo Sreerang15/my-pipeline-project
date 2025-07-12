@@ -68,10 +68,10 @@ export class MyPipelineProjectStacknew extends Stack {
 
     new lambda.Function(this, "DummyLambda3", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      handler: "index.handler",
+      handler: "entry.handler",
       code: lambda.Code.fromAsset("lambda"),
       functionName: "dummyLambda3",
-      //codeSigningConfig: codeSigningConfig,
+      codeSigningConfig: codeSigningConfig,
     });
 
     // Define the synth step

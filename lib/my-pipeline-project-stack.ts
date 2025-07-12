@@ -66,6 +66,14 @@ export class MyPipelineProjectStacknew extends Stack {
       //codeSigningConfig: codeSigningConfig,
     });
 
+    new lambda.Function(this, "DummyLambda3", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      handler: "index.handler",
+      code: lambda.Code.fromAsset("lambda"),
+      functionName: "dummyLambda3",
+      //codeSigningConfig: codeSigningConfig,
+    });
+
     // Define the synth step
 
     const buildAction = new CodeBuildStep("SynthStep", {

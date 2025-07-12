@@ -38,25 +38,25 @@ export class MyPipelineProjectStacknew extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    // const signingProfile = new signer.SigningProfile(this, "MySigningProfile", {
-    //   platform: signer.Platform.AWS_LAMBDA_SHA384_ECDSA,
-    // });
+    const signingProfile = new signer.SigningProfile(this, "MySigningProfile", {
+      platform: signer.Platform.AWS_LAMBDA_SHA384_ECDSA,
+    });
 
-    // // Code Signing Configuration
-    // const codeSigningConfig = new lambda.CodeSigningConfig(
-    //   this,
-    //   "MyCodeSigningConfig",
-    //   {
-    //     signingProfiles: [signingProfile],
-    //   }
-    // );
+    // Code Signing Configuration
+    const codeSigningConfig = new lambda.CodeSigningConfig(
+      this,
+      "MyCodeSigningConfig",
+      {
+        signingProfiles: [signingProfile],
+      }
+    );
 
     // Dummy Lambda to trigger asset stage
     new lambda.Function(this, "DummyLambda", {
       runtime: lambda.Runtime.NODEJS_20_X,
       handler: "index.handler",
       code: lambda.Code.fromAsset("lambda"),
-      //codeSigningConfig: codeSigningConfig,
+      codeSigningConfig: codeSigningConfig,
     });
 
     // Define the synth step

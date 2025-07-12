@@ -48,6 +48,8 @@ export class MyPipelineProjectStacknew extends Stack {
       "MyCodeSigningConfig",
       {
         signingProfiles: [signingProfile],
+        untrustedArtifactOnDeployment:
+          lambda.UntrustedArtifactOnDeployment.ENFORCE,
       }
     );
 

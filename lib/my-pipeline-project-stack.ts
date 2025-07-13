@@ -49,7 +49,7 @@ export class MyPipelineProjectStacknew extends Stack {
       {
         signingProfiles: [signingProfile],
         untrustedArtifactOnDeployment:
-          lambda.UntrustedArtifactOnDeployment.WARN,
+          lambda.UntrustedArtifactOnDeployment.ENFORCE,
       }
     );
 

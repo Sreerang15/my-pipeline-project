@@ -100,19 +100,15 @@ export class MyPipelineProjectStacknew extends Stack {
       synth: buildAction,
     });
 
-    // Add application stage
-    const lambdaStage = new LambdaStage(this, "LambdaDeployStage");
-    pipeline.addStage(lambdaStage);
-
     const signStep = new CodeBuildStep("SignLambdaCode", {
       input: buildAction,
       installCommands: ["npm install @aws-sdk/client-signer"],
       commands: ["echo 'Triggering Signer Job...'", "node sign-lambda.js"],
     });
 
-    pipeline.addStage(new LambdaStage(this, "SignStage"), {
-      pre: [signStep],
-    });
+    // Add application stage
+    const lambdaStage = new LambdaStage(this, "LambdaDeployStage");
+    pipeline.addStage(lambdaStage, { pre: [signStep] });
 
     // Apply log retention aspect
     // Aspects.of(this).add(

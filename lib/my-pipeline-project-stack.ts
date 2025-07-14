@@ -91,7 +91,11 @@ export class MyPipelineProjectStacknew extends Stack {
         }
       ),
       installCommands: ["npm install"],
-      commands: ["npm run build", "npx cdk synth"],
+      commands: [
+        "npm run build",
+        "npx cdk synth",
+        "cp sign-lambda.js cdk.out/",
+      ],
     });
 
     // Define the pipeline

@@ -121,7 +121,7 @@ export class MyPipelineProjectStacknew extends Stack {
             ],
             resources: [
               // Signer profile
-              "arn:aws:signer:ap-south-1:807157871082:signing-profile/MySigningProfileB3B3644B_66tketJzwLks",
+              "arn:aws:signer:ap-south-1:807157871082:/signing-profiles/MySigningProfileB3B3644B_66tketJzwLks",
 
               // Source object for signing
               "arn:aws:s3:::cdk-hnb659fds-assets-807157871082-ap-south-1/016f688f9bfdd3b74c15138d88d915a58711405a83c78142677d648778174053.zip",

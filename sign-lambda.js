@@ -17,7 +17,7 @@ async function startSigning() {
     },
     destination: {
       s3: {
-        bucketName: "honorbucket",
+        bucketName: "honorbucketone",
         prefix: "signed/",
       },
     },

@@ -110,7 +110,7 @@ export class MyPipelineProjectStacknew extends Stack {
       commands: ["echo 'Triggering Signer Job...'", "node sign-lambda.js"],
     });
 
-    pipeline.addStage(lambdaStage, {
+    pipeline.addStage(new LambdaStage(this, "SignStage"), {
       pre: [signStep],
     });
 

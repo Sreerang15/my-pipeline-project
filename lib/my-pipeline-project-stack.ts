@@ -108,6 +108,12 @@ export class MyPipelineProjectStacknew extends Stack {
       input: buildAction,
       installCommands: ["npm install @aws-sdk/client-signer"],
       commands: ["echo 'Triggering Signer Job...'", "node sign-lambda.js"],
+      rolePolicyStatements: [
+        new iam.PolicyStatement({
+          actions: ["s3:GetObject", "s3:PutObject"],
+          resources: ["arn:aws:s3:::my-sign-bucket/*"],
+        }),
+      ],
     });
 
     // Add application stage

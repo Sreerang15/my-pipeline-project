@@ -15,6 +15,7 @@ import { Project } from "aws-cdk-lib/aws-codebuild";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as signer from "aws-cdk-lib/aws-signer";
 import { warn } from "console";
+import { SignerClient, StartSigningJobCommand } from "@aws-sdk/client-signer";
 
 class CodeBuildLogRetentionAspect implements IAspect {
   private readonly retention: logs.RetentionDays;
@@ -102,6 +103,16 @@ export class MyPipelineProjectStacknew extends Stack {
     // Add application stage
     const lambdaStage = new LambdaStage(this, "LambdaDeployStage");
     pipeline.addStage(lambdaStage);
+
+    const signStep = new CodeBuildStep("SignLambdaCode", {
+      input: buildAction,
+      installCommands: ["npm install @aws-sdk/client-signer"],
+      commands: ["echo 'Triggering Signer Job...'", "node sign-lambda.js"],
+    });
+
+    pipeline.addStage(lambdaStage, {
+      pre: [signStep],
+    });
 
     // Apply log retention aspect
     // Aspects.of(this).add(

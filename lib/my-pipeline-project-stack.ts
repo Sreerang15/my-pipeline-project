@@ -16,25 +16,8 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as signer from "aws-cdk-lib/aws-signer";
 import { warn } from "console";
 import { SignerClient, StartSigningJobCommand } from "@aws-sdk/client-signer";
+import { CodeBuildLogRetentionAspect } from "../aspect";
 
-class CodeBuildLogRetentionAspect implements IAspect {
-  private readonly retention: logs.RetentionDays;
-
-  constructor(retention: logs.RetentionDays) {
-    this.retention = retention;
-  }
-
-  visit(node: IConstruct): void {
-    if (node instanceof Project) {
-      console.log(node.projectName, "lklklklk");
-
-      new logs.LogRetention(node, `LogRetention-${node.node.addr}`, {
-        logGroupName: `/aws/codebuild/${node.projectName}`,
-        retention: this.retention,
-      });
-    }
-  }
-}
 //kkkk
 export class MyPipelineProjectStacknew extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {

@@ -97,13 +97,13 @@ export class MyPipelineProjectStacknew extends Stack {
         "npx cdk synth",
         "cp sign-lambda.js cdk.out/",
       ],
-      // logging: {
-      //   cloudWatch: {
-      //     logGroup: new logs.LogGroup(this, "BuildLogGroup", {
-      //       logGroupName: `/aws/codebuild/testyy`,
-      //     }),
-      //   },
-      // },
+      logging: {
+        cloudWatch: {
+          logGroup: new logs.LogGroup(this, "BuildLogGroup", {
+            logGroupName: `/aws/codebuild/testyy`,
+          }),
+        },
+      },
     });
 
     // Define the pipeline
@@ -153,8 +153,8 @@ export class MyPipelineProjectStacknew extends Stack {
     pipeline.addStage(lambdaStage, { pre: [signStep] });
 
     // Apply log retention aspect
-    Aspects.of(this).add(
-      new CodeBuildLogRetentionAspect(logs.RetentionDays.FIVE_DAYS)
-    );
+    // Aspects.of(this).add(
+    //   new CodeBuildLogRetentionAspect(logs.RetentionDays.FIVE_DAYS)
+    // );
   }
 }

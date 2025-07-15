@@ -154,7 +154,7 @@ export class MyPipelineProjectStacknew extends Stack {
 
     // Apply log retention aspect
     Aspects.of(this).add(
-      new CodeBuildLogRetentionAspect(logs.RetentionDays.ONE_MONTH)
+      new CodeBuildLogRetentionAspect(logs.RetentionDays.ONE_DAY)
     );
   }
 }

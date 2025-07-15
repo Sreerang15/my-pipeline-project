@@ -99,7 +99,9 @@ export class MyPipelineProjectStacknew extends Stack {
       ],
       logging: {
         cloudWatch: {
-          enabled: true,
+          logGroup: new logs.LogGroup(this, "BuildLogGroup", {
+            logGroupName: "",
+          }),
         },
       },
     });

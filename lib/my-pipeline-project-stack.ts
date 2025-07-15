@@ -29,7 +29,7 @@ class CodeBuildLogRetentionAspect implements IAspect {
       console.log(node.projectName, "lklklklk");
 
       new logs.LogRetention(node, `LogRetention-${node.node.addr}`, {
-        logGroupName: `/aws/codebuild/tsss`,
+        logGroupName: `/aws/codebuild/testhhhh`,
         retention: this.retention,
       });
     }

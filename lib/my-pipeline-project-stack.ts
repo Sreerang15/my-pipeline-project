@@ -99,9 +99,7 @@ export class MyPipelineProjectStacknew extends Stack {
       ],
       logging: {
         cloudWatch: {
-          logGroup: new logs.LogGroup(this, "BuildLogGroup", {
-            logGroupName: `/aws/codebuild/testzz`,
-          }),
+          enabled: true,
         },
       },
     });

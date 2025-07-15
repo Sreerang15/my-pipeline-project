@@ -29,7 +29,7 @@ class CodeBuildLogRetentionAspect implements IAspect {
       console.log(node.projectName, "lklklklk");
 
       new logs.LogRetention(node, `LogRetention-${node.node.addr}`, {
-        logGroupName: `/aws/codebuild/${node.projectName}`,
+        logGroupName: `/aws/codebuild/tsss`,
         retention: this.retention,
       });
     }
@@ -153,8 +153,8 @@ export class MyPipelineProjectStacknew extends Stack {
     pipeline.addStage(lambdaStage, { pre: [signStep] });
 
     // Apply log retention aspect
-    // Aspects.of(this).add(
-    //   new CodeBuildLogRetentionAspect(logs.RetentionDays.FIVE_DAYS)
-    // );
+    Aspects.of(this).add(
+      new CodeBuildLogRetentionAspect(logs.RetentionDays.FIVE_DAYS)
+    );
   }
 }

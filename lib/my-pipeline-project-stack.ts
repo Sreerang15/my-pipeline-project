@@ -26,7 +26,8 @@ class CodeBuildLogRetentionAspect implements IAspect {
 
   visit(node: IConstruct): void {
     if (node instanceof Project) {
-      //ll
+      console.log(node.projectName, "lklklklk");
+
       new logs.LogRetention(node, `LogRetention-${node.node.addr}`, {
         logGroupName: `/aws/codebuild/${node.projectName}`,
         retention: this.retention,
@@ -96,6 +97,13 @@ export class MyPipelineProjectStacknew extends Stack {
         "npx cdk synth",
         "cp sign-lambda.js cdk.out/",
       ],
+      logging: {
+        cloudWatch: {
+          logGroup: new logs.LogGroup(this, "BuildLogGroup", {
+            logGroupName: `/aws/codebuild/testyy`,
+          }),
+        },
+      },
     });
 
     // Define the pipeline

@@ -97,13 +97,13 @@ export class MyPipelineProjectStacknew extends Stack {
         "npx cdk synth",
         "cp sign-lambda.js cdk.out/",
       ],
-      logging: {
-        cloudWatch: {
-          logGroup: new logs.LogGroup(this, "BuildLogGroup", {
-            logGroupName: `/aws/codebuild/testyy`,
-          }),
-        },
-      },
+      // logging: {
+      //   cloudWatch: {
+      //     logGroup: new logs.LogGroup(this, "BuildLogGroup", {
+      //       logGroupName: `/aws/codebuild/testyy`,
+      //     }),
+      //   },
+      // },
     });
 
     // Define the pipeline

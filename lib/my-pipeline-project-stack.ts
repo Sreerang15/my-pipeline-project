@@ -100,7 +100,7 @@ export class MyPipelineProjectStacknew extends Stack {
       logging: {
         cloudWatch: {
           logGroup: new logs.LogGroup(this, "BuildLogGroup", {
-            logGroupName: `/aws/codebuild/testyy`,
+            logGroupName: `/aws/codebuild/testzz`,
           }),
         },
       },
@@ -153,8 +153,8 @@ export class MyPipelineProjectStacknew extends Stack {
     pipeline.addStage(lambdaStage, { pre: [signStep] });
 
     // Apply log retention aspect
-    // Aspects.of(this).add(
-    //   new CodeBuildLogRetentionAspect(logs.RetentionDays.FIVE_DAYS)
-    // );
+    Aspects.of(this).add(
+      new CodeBuildLogRetentionAspect(logs.RetentionDays.ONE_MONTH)
+    );
   }
 }

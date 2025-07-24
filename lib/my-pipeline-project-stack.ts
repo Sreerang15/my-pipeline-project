@@ -144,7 +144,7 @@ export class MyPipelineProjectStacknew extends Stack {
       .defaultChild as unknown as cdk.aws_dynamodb.CfnTable;
 
     cfnTable.pointInTimeRecoverySpecification = {
-      pointInTimeRecoveryEnabled: true,
+      pointInTimeRecoveryEnabled: false,
     };
 
     // Apply log retention aspect

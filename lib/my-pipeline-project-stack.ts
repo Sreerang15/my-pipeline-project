@@ -136,11 +136,16 @@ export class MyPipelineProjectStacknew extends Stack {
     const lambdaStage = new LambdaStage(this, "LambdaDeployStage");
     pipeline.addStage(lambdaStage, { pre: [signStep] });
 
-    new Table(this, "MyTable", {
+    const table = new Table(this, "MyTable", {
       partitionKey: { name: "id", type: AttributeType.STRING },
       tableName: "MyDynamoDBTable",
-      pointInTimeRecovery: true,
     });
+    const cfnTable = table.node
+      .defaultChild as unknown as cdk.aws_dynamodb.CfnTable;
+
+    cfnTable.pointInTimeRecoverySpecification = {
+      pointInTimeRecoveryEnabled: true,
+    };
 
     // Apply log retention aspect
     Aspects.of(this).add(

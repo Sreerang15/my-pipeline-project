@@ -17,6 +17,7 @@ import * as signer from "aws-cdk-lib/aws-signer";
 import { warn } from "console";
 import { SignerClient, StartSigningJobCommand } from "@aws-sdk/client-signer";
 import { CodeBuildLogRetentionAspect } from "../aspect";
+import { Table, AttributeType } from "aws-cdk-lib/aws-dynamodb";
 
 //kkkk
 export class MyPipelineProjectStacknew extends Stack {
@@ -134,6 +135,12 @@ export class MyPipelineProjectStacknew extends Stack {
     // Add application stage
     const lambdaStage = new LambdaStage(this, "LambdaDeployStage");
     pipeline.addStage(lambdaStage, { pre: [signStep] });
+
+    new Table(this, "MyTable", {
+      partitionKey: { name: "id", type: AttributeType.STRING },
+      tableName: "MyDynamoDBTable",
+      pointInTimeRecovery: true,
+    });
 
     // Apply log retention aspect
     Aspects.of(this).add(

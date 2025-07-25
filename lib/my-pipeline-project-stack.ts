@@ -148,7 +148,7 @@ export class MyPipelineProjectStacknew extends Stack {
 
     (tableProps.pointInTimeRecoverySpecification as PointInTimeRecoverySpecification) =
       tableProps.pointInTimeRecoverySpecification ?? {
-        pointInTimeRecoveryEnabled: true,
+        pointInTimeRecoveryEnabled: false,
       };
 
     const table = new Table(this, "MyTable", tableProps);

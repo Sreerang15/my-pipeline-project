@@ -17,7 +17,12 @@ import * as signer from "aws-cdk-lib/aws-signer";
 import { warn } from "console";
 import { SignerClient, StartSigningJobCommand } from "@aws-sdk/client-signer";
 import { CodeBuildLogRetentionAspect } from "../aspect";
-import { Table, TableProps , AttributeType, PointInTimeRecoverySpecification } from "aws-cdk-lib/aws-dynamodb";
+import {
+  Table,
+  TableProps,
+  AttributeType,
+  PointInTimeRecoverySpecification,
+} from "aws-cdk-lib/aws-dynamodb";
 
 //kkkk
 export class MyPipelineProjectStacknew extends Stack {
@@ -140,10 +145,11 @@ export class MyPipelineProjectStacknew extends Stack {
       partitionKey: { name: "id", type: AttributeType.STRING },
       tableName: "MyDynamoDBTable",
     };
-  
-    tableProps.pointInTimeRecoverySpecification as PointInTimeRecoverySpecification = tableProps.pointInTimeRecoverySpecification ?? {
-      pointInTimeRecoveryEnabled : true
-    }
+
+    (tableProps.pointInTimeRecoverySpecification as PointInTimeRecoverySpecification) =
+      tableProps.pointInTimeRecoverySpecification ?? {
+        pointInTimeRecoveryEnabled: true,
+      };
 
     const table = new Table(this, "MyTable", tableProps);
 

@@ -17,7 +17,7 @@ import * as signer from "aws-cdk-lib/aws-signer";
 import { warn } from "console";
 import { SignerClient, StartSigningJobCommand } from "@aws-sdk/client-signer";
 import { CodeBuildLogRetentionAspect } from "../aspect";
-import { Table, AttributeType } from "aws-cdk-lib/aws-dynamodb";
+import { Table, TableProps , AttributeType, PointInTimeRecoverySpecification } from "aws-cdk-lib/aws-dynamodb";
 
 //kkkk
 export class MyPipelineProjectStacknew extends Stack {
@@ -136,16 +136,16 @@ export class MyPipelineProjectStacknew extends Stack {
     const lambdaStage = new LambdaStage(this, "LambdaDeployStage");
     pipeline.addStage(lambdaStage, { pre: [signStep] });
 
-    const table = new Table(this, "MyTable", {
+    let tableProps: TableProps = {
       partitionKey: { name: "id", type: AttributeType.STRING },
       tableName: "MyDynamoDBTable",
-    });
-    const cfnTable = table.node
-      .defaultChild as unknown as cdk.aws_dynamodb.CfnTable;
-
-    cfnTable.pointInTimeRecoverySpecification = {
-      pointInTimeRecoveryEnabled: true,
     };
+  
+    tableProps.pointInTimeRecoverySpecification as PointInTimeRecoverySpecification = tableProps.pointInTimeRecoverySpecification ?? {
+      pointInTimeRecoveryEnabled : true
+    }
+
+    const table = new Table(this, "MyTable", tableProps);
 
     // Apply log retention aspect
     Aspects.of(this).add(

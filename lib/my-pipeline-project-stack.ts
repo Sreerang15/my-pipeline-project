@@ -85,6 +85,7 @@ export class MyPipelineProjectStacknew extends Stack {
         "npm run build",
         "npx cdk synth",
         "cp sign-lambda.js cdk.out/",
+        "node -v",
       ],
       logging: {
         cloudWatch: {

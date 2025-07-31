@@ -80,7 +80,7 @@ export class MyPipelineProjectStacknew extends Stack {
           trigger: GitHubTrigger.NONE,
         }
       ),
-      installCommands: ["npm install"],
+      installCommands: ["node -v", "npm install"],
       commands: [
         "npm run build",
         "npx cdk synth",

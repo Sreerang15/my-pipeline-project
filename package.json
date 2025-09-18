@@ -1,7 +1,6 @@
 {
   "name": "my-pipeline-project",
   "version": "0.1.0",
-  "type": "module",
   "bin": {
     "my-pipeline-project": "bin/my-pipeline-project.js"
   },

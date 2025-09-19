@@ -86,6 +86,7 @@ export class MyPipelineProjectStacknew extends Stack {
         "npx cdk synth",
         "cp sign-lambda.js cdk.out/",
         "node -v",
+        "cd lambda",
         "npm i",
       ],
       logging: {

@@ -1,10 +1,7 @@
 //env variable for aws profile
-process.env.AWS_PROFILE = "your_profile";
 
-const axios = require("axios").default;
 const AWS = require("aws-sdk");
-
-const regions = ["ap-south-1"];
+const axios = require("axios").default;
 const SLACK_URL = "https://hooks.slack.com/services/CHANGE";
 
 async function getAllStacks(cloudformation) {
@@ -27,6 +24,8 @@ async function getAllStacks(cloudformation) {
 }
 
 exports.handler = async function detectDrifts() {
+  const regions = ["ap-south-1"];
+
   for (const region of regions) {
     const cloudformation = new AWS.CloudFormation({ region });
     const stacks = await getAllStacks(cloudformation);
